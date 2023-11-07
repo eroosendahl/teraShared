@@ -4,13 +4,15 @@ import recipeStyles from "./styles";
 import MenuImage from "../../components/MenuImage/MenuImage";
 import { dummyStores } from "../../dummyData/dummyData";
 import { awsIP } from '../../Utility'
-import styles from "./styles";
+import mainStyles from "./styles";
+import HomeButton from "../../components/HomeButton/HomeButton";
+import HomeSeparator from "../../components/HomeSeparator/HomeSeparator";
 
 export default function StoresScreen(props) {
   const { navigation } = props;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const localFetchURL = awsIP + '/DummyData'
+  const localFetchURL = awsIP + '/allStores'
 
 
 
@@ -23,7 +25,11 @@ export default function StoresScreen(props) {
           }}
         />
       ),
-      headerRight: () => <View />,
+      headerRight: () => <HomeButton
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      />,
     });
   }, []);
 
@@ -46,15 +52,19 @@ export default function StoresScreen(props) {
 
   const onPressStore = (item) => {
     navigation.navigate("Store", { storeItem: item });
+
+    /**
+     * send message to db pinning the store "item"
+     */
   };
 
   const renderStores = ({ item }) => {
     if (item.title === undefined) return;
     return (
-      <TouchableHighlight onPress={() => onPressStore(item)} style={styles.itemCard}>
-        <View style={styles.itemContainerAlt}>
-          <Image style={styles.imageAlt} source={{ uri: item.image }} />
-          <Text style={styles.itemHeaderTextAlt}>{item.title}</Text>
+      <TouchableHighlight onPress={() => onPressStore(item)} style={mainStyles.itemCard}>
+        <View style={mainStyles.itemContainerAlt}>
+          <Image style={mainStyles.imageAlt} source={{ uri: item.image }} />
+          <Text style={mainStyles.itemHeaderTextAlt}>{item.title}</Text>
         </View>
       </TouchableHighlight>
     )
@@ -64,6 +74,7 @@ export default function StoresScreen(props) {
 
   return (
     <View>
+      <HomeSeparator size="small" />
       <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={data} renderItem={renderStores} keyExtractor={(item) => `${item.id}`} />
     </View>
   );

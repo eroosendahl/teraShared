@@ -7,17 +7,22 @@ import {
   TouchableHighlight,
   Image,
 } from "react-native";
-import styles from "./styles";
+import mainStyles from "./styles";
 import MenuImage from "../../components/MenuImage/MenuImage";
-import { awsIP } from '../../Utility'
+import { awsIP, constructRecipesInStoresData, constructPricesInRecipes } from '../../Utility'
+import HomeButton from "../../components/HomeButton/HomeButton";
+import HomeSeparator from "../../components/HomeSeparator/HomeSeparator";
 
 export default function IngredientScreen(props) {
   const { navigation } = props;
-  const [data, setData] = useState([]);
   const route = useRoute();
-  const ingredientItem = route.params?.ingredientItem;
+  const targetIngredientItem = route.params?.ingredientItem;
+  const [data, setData] = useState([]);
+  const [storesData, setStoresData] = useState([]);
+  const [recipesData, setRecipesData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const localFetchURL = awsIP + '/DummyData'
+  const storesFetchURL = awsIP + '/allStores'
+  const recipesFetchURL = awsIP + '/allRecipes'
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,24 +33,30 @@ export default function IngredientScreen(props) {
           }}
         />
       ),
-      headerRight: () => <View />,
+      headerRight: () => <HomeButton
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      />,
     });
   }, []);
 
   const gatherData = async () => {
-    const response = await fetch(localFetchURL)
-    //setData(await response.json())
-
-    setData((await response.json()).map((storeItem) => {
-      return {
-        id: storeItem.id,
-        title: storeItem.title,
-        image: storeItem.image,
-        recipes: storeItem.recipes.filter(recipe => {
-          return recipe.ingredients.some(recIngr => (recIngr === ingredientItem.title))
-        }),
-      }
-    }));
+    const storesResponse = await fetch(storesFetchURL)
+    const storesPromise = await storesResponse.json()
+    setData(storesPromise)
+    setStoresData(storesPromise.map(item => {
+      return ({
+        id: item.id,
+        image: item.image,
+        title: item.title,
+        ingredients: item.ingredients
+      })
+    }
+    ))
+    const recipesResponse = await fetch(recipesFetchURL)
+    const recipesPromise = await recipesResponse.json()
+    setRecipesData(recipesPromise)
     setLoading(false);
   }
 
@@ -64,24 +75,19 @@ export default function IngredientScreen(props) {
 
     return (
       <TouchableHighlight
-        style={styles.itemContainer}
+        style={mainStyles.itemContainer}
         underlayColor="#f0f0f0"
         onPress={() => {
           onPressRecipe(item)
         }}
       >
-        <View style={styles.itemDetails}>
-          <Image style={styles.itemImage} source={{ uri: item.image }} />
+        <View style={mainStyles.itemDetails}>
+          <Image style={mainStyles.itemImage} source={{ uri: item.image }} />
           <View>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemPrice}>
-              Original Price: ${item.price.toFixed(2)}
-            </Text>
-            <Text style={styles.itemDiscount}>
-              Discounted Price: ${discountPrice}
-            </Text>
-            <View style={styles.itemIngredientsBox}>
-              <Text style={styles.itemIngredientsText}>Ingredients: {ingredients}</Text>
+            <Text style={mainStyles.itemName}>{item.name}</Text>
+
+            <View style={mainStyles.itemIngredientsBox}>
+              <Text style={mainStyles.itemIngredientsText}>Ingredients: {ingredients}</Text>
             </View>
           </View>
         </View>
@@ -89,12 +95,10 @@ export default function IngredientScreen(props) {
     );
   };
 
-
-
   const renderStores = (item) => {  //https://stackoverflow.com/questions/48353471/checking-if-a-state-object-is-empty
     if (item.id === undefined || Object.keys(item.recipes).length == 0) return
     return (
-      <View style={styles.storeContainer}>
+      <View style={mainStyles.storeContainer}>
         <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 20 }}>Store: {item.title}</Text>
         <FlatList
           horizontal
@@ -107,28 +111,46 @@ export default function IngredientScreen(props) {
     );
   }
 
-  if (loading) {
-    return (
-      <Text style={styles.loadingText}>
-        LOADING
-      </Text>
-    )
-  }
-  else return (
-    <View style={styles.container}>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Recipes using: {ingredientItem.title}</Text>
-      <View>
-        <FlatList
-          vertical
-          numColumns={1}
-          showsVerticalScrollIndicator={false}
-          data={data}
-          renderItem={(item) => renderStores(item.item)}
-          keyExtractor={(item) => item.id}
-        />
+  function render() {
+    const pinnedStoreIDs = ["3jpfqAS0au00ektJSoFY", "nhpwEfjVu2i62JoP9m8r"] //temporary version
+
+    const pinnedStoresData = storesData.filter((storeItem) => (pinnedStoreIDs.some((pinnedID) => pinnedID === storeItem.id)))
+
+    const filteredRecipes = recipesData.filter((recipeItem) => {
+      return recipeItem.ingredients.some((recipeIngredient) => {
+        return (recipeIngredient === targetIngredientItem.title)
+      })
+    })
+
+    constructRecipesInStoresData(pinnedStoresData, filteredRecipes)
+
+    constructPricesInRecipes(pinnedStoresData)
+
+    if (loading) {
+      return (
+        <Text style={mainStyles.loadingText}>
+          LOADING
+        </Text>
+      )
+    }
+    else return (
+      <View style={mainStyles.container}>
+        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Recipes using: {targetIngredientItem.title}</Text>
+        <View>
+          <FlatList
+            vertical
+            numColumns={1}
+            showsVerticalScrollIndicator={false}
+            data={pinnedStoresData}
+            renderItem={(item) => renderStores(item.item)}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+
+  return render()
 }
 
 

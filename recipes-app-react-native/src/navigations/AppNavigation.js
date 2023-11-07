@@ -13,13 +13,16 @@ import IngredientScreen from "../screens/Ingredient/IngredientScreen";
 import RecipesScreen from "../screens/Recipes/RecipesScreen";
 import RecipeScreen from "../screens/Recipe/RecipeScreen";
 import StoresScreen from "../screens/Stores/StoresScreen";
+import AllStoresInventoriesScreen from "../screens/AllStoresInventories/AllStoresInventoriesScreen";
 import Login from "../screens/Login/Login";
 import Signup from "../screens/Signup";
 import Settings from "../screens/Settings/Settings";
+import OnboardingScreen from "../screens/Onboarding/OnboardingScreen";
+import OnboardingStoresScreen from "../screens/Onboarding/OnboardingStoresScreen";
 
 const Stack = createStackNavigator();
 
-function MainNavigator(user) {
+function MainNavigator({ user }) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -30,7 +33,7 @@ function MainNavigator(user) {
           flex: 1,
         },
       }} 
-      initialRouteName={user ? "Home" : "Login"}
+      initialRouteName={user ? "Home" : "Onboarding"}
     >
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
@@ -40,18 +43,21 @@ function MainNavigator(user) {
       <Stack.Screen name="IngredientByStore" component={IngredientByStoreScreen} />
       <Stack.Screen name="Categories" component={CategoriesScreen} />
       <Stack.Screen name="Stores" component={StoresScreen} />
+      <Stack.Screen name="AllStoresInventories" component={AllStoresInventoriesScreen} />
       <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="Ingredients" component={IngredientsScreen} />
       <Stack.Screen name="Ingredient" component={IngredientScreen} />
       <Stack.Screen name="Recipes" component={RecipesScreen} />
       <Stack.Screen name="Recipe" component={RecipeScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="OnboardingStoresScreen" component={OnboardingStoresScreen} options={{ headerShown: false }} />
+
     </Stack.Navigator>
   );
 }
 
 const Drawer = createDrawerNavigator();
-
-function DrawerStack() {
+function DrawerStack({ user }) {
   return (
     <Drawer.Navigator
       drawerPosition="left"
@@ -64,18 +70,22 @@ function DrawerStack() {
         <DrawerContainer navigation={navigation} />
       )}
     >
-      <Drawer.Screen name="Main" component={MainNavigator} />
+      <Drawer.Screen name="Main">
+        {props => <MainNavigator {...props} user={user} />}
+      </Drawer.Screen>
     </Drawer.Navigator>
   );
 }
 
-export default function AppContainer() {
 
+export default function AppContainer({ user }) {
   return (
     <NavigationContainer>
-      <DrawerStack user={this.user}/>
+      <DrawerStack user={user} />
     </NavigationContainer>
   );
 }
+
+
 
 console.disableYellowBox = true;

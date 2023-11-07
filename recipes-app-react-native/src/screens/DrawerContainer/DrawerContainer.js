@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import PropTypes from "prop-types";
-import styles from "./styles";
+import styles from './styles';
 import MenuButton from "../../components/MenuButton/MenuButton";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
@@ -38,14 +38,14 @@ export default function DrawerContainer(props) {
             navigation.closeDrawer();
           }}
         />
-        <MenuButton
+        {/* <MenuButton
           title="SEARCH (tbd)"
           source={require("../../../assets/icons/search.png")}
           onPress={() => {
             navigation.navigate("Search");
             navigation.closeDrawer();
           }}
-        />
+        /> */}
         <MenuButton
           title={isLoggedIn ? "Logout" : "Login"}
           onPress={() => {

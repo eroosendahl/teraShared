@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"; 
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 
 
@@ -20,17 +21,45 @@ function Signup() {
 
   const handleSignup = async () => {
     const auth = getAuth(); // Initialize Firebase Auth
-
+    const db = getFirestore(); // Initialize Firestore
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      sendEmailVerification(auth.currentUser).then(() => {
-      })
-      navigation.navigate("Home"); // Redirect to the Home screen after successful signup
+      const { user } = userCredential;
+  
+      // Only write to Firestore if the user is authenticated
+      if (user) {
+        sendEmailVerification(user).then(() => {
+          Alert.alert(
+            "Verification Email Sent",
+            "You will receive an email shortly to verify your account.",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
+        });
+  
+        // Add a new document in collection "users" with ID = user's UID
+        await setDoc(doc(db, "users", user.uid), {
+          pinnedStores: ["RCZ90fzdrTNEDZdOCKRI", "FYRd3sKhDPPOqBeQiLlz"],
+          recent: [
+            {id: "", screen: "", type: ""},
+            {id: "", screen: "", type: ""},
+            {id: "", screen: "", type: ""},
+            {id: "", screen: "", type: ""},
+            {id: "", screen: "", type: ""}
+          ]
+        });
+
+        navigation.navigate("OnboardingStoresScreen"); // Redirect to the Home screen after successful signup
+      }
       
     } catch (error) {
       console.error("Error signing up:", error);
     }
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -135,3 +164,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+

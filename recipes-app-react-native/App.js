@@ -8,7 +8,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCHZvLjyDai0WaKFnHJE0rvAZDE8Qy_t94",
-  authDomain: "project-4fe07.firebaseapp.com",
+  authDomain: "project-4fe07.firebaseapp .com",
   projectId: "project-4fe07",
   storageBucket: "project-4fe07.appspot.com",
   messagingSenderId: "165010098186",
