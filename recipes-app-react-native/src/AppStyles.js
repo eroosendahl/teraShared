@@ -244,6 +244,9 @@ export const mainStyles = StyleSheet.create({
     fontWeight: "bold",
   },
   itemContainer: {
+    left: 10,
+    marginLeft: 10,
+    paddingLeft: 10,
     flex: 1,
     flexDirection: "row",
     borderColor: "#ccc",
@@ -255,6 +258,8 @@ export const mainStyles = StyleSheet.create({
     height: ITEM_CONTAINER_HEIGHT
   },
   itemContainerLong: {
+    marginLeft: 10,
+    paddingLeft: 10,
     flex: 1,
     flexDirection: "row",
     borderColor: "#ccc",
