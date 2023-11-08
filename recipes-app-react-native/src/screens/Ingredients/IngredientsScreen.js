@@ -111,7 +111,7 @@ export default function IngredientsScreen(props) {
             data={catIngrs.data}
             renderItem={(item) => renderIngredient(item.item)}
             keyExtractor={(item) => { item.id }}
-            ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+            ItemSeparatorComponent={() => <View style={{ width: 1 }} />}
           />
         </View>)
     })
