@@ -291,6 +291,8 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
   },
   itemDetailsAlt: {
+    marginLeft: 10,
+    paddingLeft: 10,
     flex: 1,
     padding: 0,
     margin: 0,
