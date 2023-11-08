@@ -124,12 +124,11 @@ export default function InspectStoreScreen(props) {
   }
 
   function renderItemNameSized(item) {
-    if (item.name.length >= 10) {
+    if (item.name.length >= 15) {
       return <Text style={styles.itemNameAltSmall}>{item.name}</Text>
     } else {
       return <Text style={styles.itemNameAlt}>{item.name}</Text>
     }
-
   }
 
   const renderIngredients = ({ item }, storeItem) => {

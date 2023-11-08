@@ -194,14 +194,13 @@ export default function HomeScreen(props) {
     return readyPopularRecipes
   }
 
-
-
   const renderRecentItems = () => {
     return <FlatList
       horizontal
       data={usersRecentItems}
       renderItem={(item) => renderRecentItem(item.item)}
       keyExtractor={item => (item.id)}
+      ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
     />
   }
 
@@ -368,7 +367,7 @@ export default function HomeScreen(props) {
     })
 
     console.log("top ten!")
-    const topTenPopRecipes = popularRecipes.slice(0,9)
+    const topTenPopRecipes = popularRecipes.slice(0, 9)
     topTenPopRecipes.forEach(item => {
       console.log(item.id)
     })
@@ -402,6 +401,7 @@ export default function HomeScreen(props) {
             keyExtractor={(item) => {
               return item.id
             }}
+            ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
           />
         </View>
       )
