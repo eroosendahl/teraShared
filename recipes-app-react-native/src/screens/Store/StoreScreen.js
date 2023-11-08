@@ -123,7 +123,7 @@ export default function InspectStoreScreen(props) {
     }
   }
 
-  function renderItemNameSized(itemName) {
+  function renderItemNameSized(item) {
     if (item.name.length >= 10) {
       return <Text style={styles.itemNameAltSmall}>{item.name}</Text>
     } else {
@@ -144,7 +144,7 @@ export default function InspectStoreScreen(props) {
           <View style={styles.itemDetailsAlt}>
             <Image style={styles.itemImageAlt} source={{ uri: item.image }} />
             <View style={{ marginLeft: 0, flex: 1 }}>
-              {renderItemNameSized(item.name)}
+              {renderItemNameSized(item)}
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.itemPrice}>${item.price.toFixed(2)} </Text>
                 <Arrow size={10} color={'black'} />
