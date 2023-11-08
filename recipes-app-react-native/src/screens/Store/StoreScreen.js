@@ -123,6 +123,15 @@ export default function InspectStoreScreen(props) {
     }
   }
 
+  function renderItemNameSized(itemName) {
+    if (item.name.length >= 10) {
+      return <Text style={styles.itemNameAltSmall}>{item.name}</Text>
+    } else {
+      return <Text style={styles.itemNameAlt}>{item.name}</Text>
+    }
+
+  }
+
   const renderIngredients = ({ item }, storeItem) => {
     return (
       <View style={styles.storeIngredientAndFilterBox}>
@@ -135,7 +144,7 @@ export default function InspectStoreScreen(props) {
           <View style={styles.itemDetailsAlt}>
             <Image style={styles.itemImageAlt} source={{ uri: item.image }} />
             <View style={{ marginLeft: 0, flex: 1 }}>
-              <Text style={styles.itemNameAlt}>{item.name}</Text>
+              {renderItemNameSized(item.name)}
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.itemPrice}>${item.price.toFixed(2)} </Text>
                 <Arrow size={10} color={'black'} />
@@ -307,7 +316,7 @@ export default function InspectStoreScreen(props) {
           ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
         />
         <HomeSeparator size='tiny' />
-        
+
         <Text style={styles.categoryHeader}>Ingredients</Text>
         <Text>Click the "Filter by" tab to add ingredient to filter.</Text>
 

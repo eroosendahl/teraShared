@@ -339,6 +339,11 @@ export const mainStyles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
+  itemNameAltSmall: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+  }
   itemPrice: {
     fontSize: 11,
     color: "#555",
