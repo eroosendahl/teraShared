@@ -277,6 +277,8 @@ export const mainStyles = StyleSheet.create({
     marginRight: 10,
   },
   headerButtonContainer: {
+    borderRadius: 20,
+    underlayColor: "transparent",
     padding: 10
   },
   headerButtonImage: {

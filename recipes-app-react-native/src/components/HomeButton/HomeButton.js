@@ -9,7 +9,7 @@ export default function MenuButton(props) {
   styles = mainStyles
 
   return (
-    <TouchableHighlight title={title} style={styles.headerButtonContainer} onPress={onPress}>
+    <TouchableHighlight underlayColor={'#d3d3d3'} title={title} style={styles.headerButtonContainer} onPress={onPress}>
       <View>
         <Text>Home</Text>
         <Image style={styles.headerButtonImage} source={require("../../../assets/icons/home.png")} />
