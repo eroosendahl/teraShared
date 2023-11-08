@@ -343,7 +343,7 @@ export const mainStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     marginBottom: 5,
-  }
+  },
   itemPrice: {
     fontSize: 11,
     color: "#555",
